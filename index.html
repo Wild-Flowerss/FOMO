@@ -44,7 +44,7 @@
 
     .meme {
       position: absolute;
-      width: 250px; /* bigger size */
+      width: 300px; /* bigger memes! */
       height: auto;
       z-index: 8;
       pointer-events: none;
@@ -68,7 +68,8 @@
       'https://media.tenor.com/VpJg8URLor8AAAAC/nyan-cat.gif',
       'https://th.bing.com/th/id/OIP.3NUFmAdbGUw5OBfO-EOwDgHaHa?w=182&h=182&c=7&r=0&o=7&pid=1.7&rm=3',
       'https://th.bing.com/th/id/OIP.89BvV_noynx_fiyP4euHUAHaHe?w=184&h=186&c=7&r=0&o=7&pid=1.7&rm=3',
-      'https://th.bing.com/th/id/OIP.9ktTfd-ErSVrpYaCzNkhVAHaLq?w=115&h=180&c=7&r=0&o=7&pid=1.7&rm=3'
+      'https://th.bing.com/th/id/OIP.9ktTfd-ErSVrpYaCzNkhVAHaLq?w=115&h=180&c=7&r=0&o=7&pid=1.7&rm=3',
+      'https://tse4.mm.bing.net/th/id/OIP.9E29S1CD8V3w5hcYgmhpugHaHa?rs=1&pid=ImgDetMain&o=7&rm=3' // new meme
     ];
 
     let intervalStarted = false;
@@ -112,14 +113,15 @@
 
       const memeElements = [];
 
-      // spawn 2 copies of each meme for more chaos
+      // spawn MANY duplicates of each meme
       memes.forEach(url => {
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 5; i++) { // 5 duplicates per meme, total 25+ memes
           const img = document.createElement('img');
           img.src = url;
           img.className = 'meme';
-          img.style.top = Math.random() * (window.innerHeight - 250) + 'px';
-          img.style.left = Math.random() * (window.innerWidth - 250) + 'px';
+          img.style.width = 300 + Math.random() * 100 + 'px'; // random bigger sizes
+          img.style.top = Math.random() * (window.innerHeight - 300) + 'px';
+          img.style.left = Math.random() * (window.innerWidth - 300) + 'px';
           document.body.appendChild(img);
           memeElements.push(img);
         }
