@@ -44,10 +44,11 @@
 
     .meme {
       position: absolute;
-      width: 300px; /* bigger memes! */
+      width: 300px;
       height: auto;
       z-index: 8;
       pointer-events: none;
+      transform-origin: center;
     }
   </style>
 </head>
@@ -69,7 +70,8 @@
       'https://th.bing.com/th/id/OIP.3NUFmAdbGUw5OBfO-EOwDgHaHa?w=182&h=182&c=7&r=0&o=7&pid=1.7&rm=3',
       'https://th.bing.com/th/id/OIP.89BvV_noynx_fiyP4euHUAHaHe?w=184&h=186&c=7&r=0&o=7&pid=1.7&rm=3',
       'https://th.bing.com/th/id/OIP.9ktTfd-ErSVrpYaCzNkhVAHaLq?w=115&h=180&c=7&r=0&o=7&pid=1.7&rm=3',
-      'https://tse4.mm.bing.net/th/id/OIP.9E29S1CD8V3w5hcYgmhpugHaHa?rs=1&pid=ImgDetMain&o=7&rm=3' // new meme
+      'https://tse4.mm.bing.net/th/id/OIP.9E29S1CD8V3w5hcYgmhpugHaHa?rs=1&pid=ImgDetMain&o=7&rm=3',
+      'https://www.boredpanda.com/blog/wp-content/uploads/2023/07/funny-relatable-gaming-memes-fb-64b3c28f017bf__700-png.jpg' // new meme
     ];
 
     let intervalStarted = false;
@@ -93,13 +95,11 @@
         gifIndex = (gifIndex + 1) % gifs.length;
 
         if (gifIndex === 0) {
-          // After 2 GIFs, show memes
           setTimeout(() => {
             showMemes(() => {
-              // After memes, restart GIF cycle
               cycleGIFs();
             });
-          }, 2000); // each GIF shows for 2 seconds
+          }, 2000); // GIF shows for 2 seconds
         } else {
           setTimeout(cycleGIFs, 2000);
         }
@@ -110,16 +110,15 @@
 
     function showMemes(callback) {
       gif.style.display = 'none';
-
       const memeElements = [];
 
       // spawn MANY duplicates of each meme
       memes.forEach(url => {
-        for (let i = 0; i < 5; i++) { // 5 duplicates per meme, total 25+ memes
+        for (let i = 0; i < 5; i++) { // 5 duplicates each meme, 30+ memes total
           const img = document.createElement('img');
           img.src = url;
           img.className = 'meme';
-          img.style.width = 300 + Math.random() * 100 + 'px'; // random bigger sizes
+          img.style.width = 300 + Math.random() * 150 + 'px'; // even bigger random sizes
           img.style.top = Math.random() * (window.innerHeight - 300) + 'px';
           img.style.left = Math.random() * (window.innerWidth - 300) + 'px';
           document.body.appendChild(img);
@@ -127,11 +126,21 @@
         }
       });
 
-      // remove memes after 2 seconds
+      // pick ONE random meme to spin
+      const spinningMeme = memeElements[Math.floor(Math.random() * memeElements.length)];
+      let angle = 0;
+      const spinSpeed = 30; // degrees per frame, very fast
+      const spinInterval = setInterval(() => {
+        angle += spinSpeed;
+        spinningMeme.style.transform = `rotate(${angle}deg)`;
+      }, 16); // ~60fps
+
+      // remove memes after 3 seconds
       setTimeout(() => {
+        clearInterval(spinInterval);
         memeElements.forEach(img => img.remove());
         callback();
-      }, 2000);
+      }, 3000); // 3 seconds now
     }
 
     button.addEventListener('click', startFOMO);
