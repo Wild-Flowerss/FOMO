@@ -11,8 +11,9 @@
       align-items: center;
       height: 100vh;
       font-family: Arial, sans-serif;
-      background: #0f1115; /* dark, easy on the eyes */
+      background: #0f1115;
       color: #e6e6eb;
+      overflow: hidden; /* prevent scroll from scattered images */
     }
 
     button {
@@ -23,28 +24,36 @@
       color: #e6e6eb;
       border: 1px solid #2a2f3a;
       border-radius: 6px;
+      z-index: 10;
     }
 
     button:hover {
       background: #242833;
     }
 
-    img {
+    #gif {
       display: none;
       width: 100vw;
       height: 100vh;
-      object-fit: contain; /* keeps both GIFs similar in size */
+      object-fit: contain;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 5;
+    }
+
+    .meme {
+      position: absolute;
+      width: 200px; /* adjust size as needed */
+      height: auto;
+      z-index: 8;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
   <button id="button">Press F to FOMO</button>
-
-  <img
-    id="gif"
-    src="https://c.tenor.com/o656qFKDzeUAAAAC/tenor.gif"
-    alt="gif"
-  />
+  <img id="gif" src="https://c.tenor.com/o656qFKDzeUAAAAC/tenor.gif" alt="gif" />
 
   <script>
     const button = document.getElementById('button');
@@ -55,19 +64,60 @@
       'https://media.tenor.com/images/333cf6c5b1aed66544e8b873cb2e4e2b/tenor.gif'
     ];
 
+    const memes = [
+      'https://media.tenor.com/VpJg8URLor8AAAAC/nyan-cat.gif',
+      'https://th.bing.com/th/id/OIP.3NUFmAdbGUw5OBfO-EOwDgHaHa?w=182&h=182&c=7&r=0&o=7&pid=1.7&rm=3',
+      'https://th.bing.com/th/id/OIP.89BvV_noynx_fiyP4euHUAHaHe?w=184&h=186&c=7&r=0&o=7&pid=1.7&rm=3',
+      'https://th.bing.com/th/id/OIP.9ktTfd-ErSVrpYaCzNkhVAHaLq?w=115&h=180&c=7&r=0&o=7&pid=1.7&rm=3'
+    ];
+
     let index = 0;
     let intervalStarted = false;
 
-    button.addEventListener('click', () => {
+    function startFOMO() {
       button.remove();
       gif.style.display = 'block';
 
       if (!intervalStarted) {
         intervalStarted = true;
+
         setInterval(() => {
           index = (index + 1) % gifs.length;
           gif.src = gifs[index];
+
+          // Show scattered memes only after GIFs
+          setTimeout(() => {
+            showMemes();
+          }, 500); // slight delay to sync with GIF change
+
         }, 2000);
+      }
+    }
+
+    function showMemes() {
+      // Create meme elements
+      const memeElements = memes.map(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.className = 'meme';
+        img.style.top = Math.random() * (window.innerHeight - 200) + 'px';
+        img.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+        document.body.appendChild(img);
+        return img;
+      });
+
+      // Remove memes after 1 second
+      setTimeout(() => {
+        memeElements.forEach(img => img.remove());
+      }, 1000);
+    }
+
+    button.addEventListener('click', startFOMO);
+
+    // Press F to trigger FOMO
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'f') {
+        startFOMO();
       }
     });
   </script>
