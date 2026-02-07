@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Increasingly Annoyed Button</title>
+  <title>Button</title>
   <style>
     body {
       display: flex;
@@ -11,6 +11,7 @@
       height: 100vh;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
+      transition: background 0.8s ease;
     }
 
     button {
@@ -21,32 +22,25 @@
   </style>
 </head>
 <body>
-  <button id="annoyedButton">Click me</button>
+  <button id="button">Click me</button>
 
   <script>
-    const button = document.getElementById("annoyedButton");
+    const button = document.getElementById('button');
+    let state = 0;
 
-    const messages = [
-      "Click me",
-      "Okay, you clicked me",
-      "You can stop now",
-      "Seriously, stop",
-      "Why are you still clicking?",
-      "This is getting annoying",
-      "I asked you to stop",
-      "Wow. You really won’t stop.",
-      "I’m done responding"
+    const backgrounds = [
+      '#f4f4f4',
+      'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)',
+      'linear-gradient(135deg, #e0f7fa 0%, #e8f5e9 100%)',
+      'linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%)'
     ];
 
-    let clicks = 0;
-
-    button.addEventListener("click", () => {
-      if (clicks < messages.length - 1) {
-        clicks++;
-        button.textContent = messages[clicks];
-      }
-      // once it reaches the last message, it ignores further clicks
+    button.addEventListener('click', () => {
+      state = (state + 1) % backgrounds.length;
+      document.body.style.background = backgrounds[state];
+      document.title = 'Button ' + '•'.repeat(state + 1);
     });
   </script>
 </body>
+</html>
 </html>
