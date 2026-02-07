@@ -13,7 +13,7 @@
       font-family: Arial, sans-serif;
       background: #0f1115;
       color: #e6e6eb;
-      overflow: hidden; /* prevent scroll from scattered images */
+      overflow: hidden;
     }
 
     button {
@@ -44,7 +44,7 @@
 
     .meme {
       position: absolute;
-      width: 200px; /* adjust size as needed */
+      width: 250px; /* bigger size */
       height: auto;
       z-index: 8;
       pointer-events: none;
@@ -71,7 +71,6 @@
       'https://th.bing.com/th/id/OIP.9ktTfd-ErSVrpYaCzNkhVAHaLq?w=115&h=180&c=7&r=0&o=7&pid=1.7&rm=3'
     ];
 
-    let index = 0;
     let intervalStarted = false;
 
     function startFOMO() {
@@ -80,41 +79,60 @@
 
       if (!intervalStarted) {
         intervalStarted = true;
-
-        setInterval(() => {
-          index = (index + 1) % gifs.length;
-          gif.src = gifs[index];
-
-          // Show scattered memes only after GIFs
-          setTimeout(() => {
-            showMemes();
-          }, 500); // slight delay to sync with GIF change
-
-        }, 2000);
+        fomoLoop();
       }
     }
 
-    function showMemes() {
-      // Create meme elements
-      const memeElements = memes.map(url => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.className = 'meme';
-        img.style.top = Math.random() * (window.innerHeight - 200) + 'px';
-        img.style.left = Math.random() * (window.innerWidth - 200) + 'px';
-        document.body.appendChild(img);
-        return img;
+    function fomoLoop() {
+      let gifIndex = 0;
+
+      function cycleGIFs() {
+        gif.style.display = 'block';
+        gif.src = gifs[gifIndex];
+        gifIndex = (gifIndex + 1) % gifs.length;
+
+        if (gifIndex === 0) {
+          // After 2 GIFs, show memes
+          setTimeout(() => {
+            showMemes(() => {
+              // After memes, restart GIF cycle
+              cycleGIFs();
+            });
+          }, 2000); // each GIF shows for 2 seconds
+        } else {
+          setTimeout(cycleGIFs, 2000);
+        }
+      }
+
+      cycleGIFs();
+    }
+
+    function showMemes(callback) {
+      gif.style.display = 'none';
+
+      const memeElements = [];
+
+      // spawn 2 copies of each meme for more chaos
+      memes.forEach(url => {
+        for (let i = 0; i < 2; i++) {
+          const img = document.createElement('img');
+          img.src = url;
+          img.className = 'meme';
+          img.style.top = Math.random() * (window.innerHeight - 250) + 'px';
+          img.style.left = Math.random() * (window.innerWidth - 250) + 'px';
+          document.body.appendChild(img);
+          memeElements.push(img);
+        }
       });
 
-      // Remove memes after 1 second
+      // remove memes after 2 seconds
       setTimeout(() => {
         memeElements.forEach(img => img.remove());
-      }, 1000);
+        callback();
+      }, 2000);
     }
 
     button.addEventListener('click', startFOMO);
-
-    // Press F to trigger FOMO
     document.addEventListener('keydown', (e) => {
       if (e.key.toLowerCase() === 'f') {
         startFOMO();
