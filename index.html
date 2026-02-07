@@ -6,41 +6,38 @@
   <style>
     body {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      transition: background 0.8s ease;
     }
 
     button {
       padding: 16px 32px;
       font-size: 16px;
       cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    img {
+      display: none;
+      max-width: 300px;
     }
   </style>
 </head>
 <body>
   <button id="button">Click me</button>
+  <img id="gif" src="https://c.tenor.com/o656qFKDzeUAAAAC/tenor.gif" alt="gif" />
 
   <script>
     const button = document.getElementById('button');
-    let state = 0;
-
-    const backgrounds = [
-      '#f4f4f4',
-      'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)',
-      'linear-gradient(135deg, #e0f7fa 0%, #e8f5e9 100%)',
-      'linear-gradient(135deg, #fff3e0 0%, #fce4ec 100%)'
-    ];
+    const gif = document.getElementById('gif');
 
     button.addEventListener('click', () => {
-      state = (state + 1) % backgrounds.length;
-      document.body.style.background = backgrounds[state];
-      document.title = 'Button ' + '•'.repeat(state + 1);
+      gif.style.display = 'block';
     });
   </script>
 </body>
-</html>
 </html>
